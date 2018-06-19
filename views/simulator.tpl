@@ -58,7 +58,7 @@
       <div class="column">
         <div class="ui attached message">
           <div class="header">
-            Parámetros del pulso de control
+            Parámetros del pulso de control (Intervención)
           </div>
           <div>Cambia los parámetros y luego presionar Simular.&nbsp;
             <div class="ui compact icon buttons">

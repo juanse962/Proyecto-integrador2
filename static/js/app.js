@@ -1,4 +1,4 @@
-var weeksLabels = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15','s16','s17','s18','s19','s20','s21','s22','s23','s24','s25','s26','s27','s28','s29','s30','s31','s32','s33','s34','s35','s36','s37','s38','s39','s40','s41','s42','s43','s44','s45','s46','s47','s48','s49','s50','s51','s52'];
+var weeksLabels = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52'];
 var options = {
                 maintainAspectRatio: false,
                 elements: {
@@ -12,13 +12,27 @@ var options = {
                         gridLines: {
                             display: true,
                             color: "rgba(99,132,255,0.2)"
+                        },scaleLabel: {
+                            display: true,
+                            labelString: 'Personas Infectadas'
                         }
                     }],
                     xAxes: [{
                         gridLines: {
                             display: false
+                        },scaleLabel: {
+                            display: true,
+                            labelString: 'Tiempo (Semanas)'
                         }
                     }]
+                },
+                tooltips: {
+                    enabled: true,
+                    intersect: false,
+                    mode: 'index',
+                    callbacks: {
+                      title: (items, data) => 'Semana '+data.labels[items[0].index]
+                    }
                 }
             }; 
 var myChart = undefined;
@@ -405,7 +419,7 @@ function initSimulator(){
           labels: defaultSim.xAxe,
           datasets: [ {
               data: defaultSim.expHi,
-              label: "Datos de campo",
+              label: "Datos experimentales",
               borderColor: "#99A3A4",
               fill: false
             }
@@ -453,7 +467,7 @@ function makeSimulation(){
               datasets: [
                 {
                   data: data.simHi,
-                  label: "Humanos Infectados",
+                  label: "Casos estimados",
                   borderColor: "#3e95cd",
                   fill: false
                 },{
@@ -463,7 +477,7 @@ function makeSimulation(){
                   fill: false
                 }, {
                   data: defaultSim.expHi,
-                  label: "Datos de campo",
+                  label: "Datos experimentales",
                   borderColor: "#99A3A4",
                   fill: false
                 }

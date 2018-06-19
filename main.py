@@ -16,7 +16,7 @@ from bottle.ext.mongo import MongoPlugin
 from bottle import route, get, post, template, redirect, static_file, error, run, request, response, default_app
 
 app = default_app()
-plugin = MongoPlugin(uri=os.environ['MONGODB_URI'], db="heroku_gbdlfhrx", json_mongo=True)
+plugin = MongoPlugin(uri=os.environ['MONGODB_URI'], db="heroku_r18zcfb4", json_mongo=True)
 app.install(plugin)
 
 data_download_template = 'static/files/templates/data_download.xlsx'
