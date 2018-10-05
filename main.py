@@ -317,7 +317,7 @@ def download_year_from_db(mongodb, yearId):
     if is_auth(mongodb, cookie):
         user = mongodb.sessions.find_one({'cookie':cookie}, {'user':1})['user']
         try:
-            result = mongodb[user].data.byWeeks.find_one({'_id':ObjectId(yearId)})
+            result = mongodb[user].byWeeks.data.find_one({'_id':ObjectId(yearId)})
             if result is None:
                 redirect('/datos/?error=404')
         except Exception:
