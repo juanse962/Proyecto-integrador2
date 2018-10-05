@@ -34,9 +34,9 @@ var options = {
                       title: (items, data) => 'Semana '+data.labels[items[0].index]
                     }
                 }
-            }; 
-var myChart = undefined;
-var myLayers = undefined;
+            };
+
+var map, mapPoints, drawPolygon, myChart, myLayers;
 var defaultSim = {};
 
 $(document).ready(function(){
@@ -127,7 +127,10 @@ function initMap(){
 
     $('.dropdown').dropdown();
 
-    $("#year").on("input change", function(){filterMap()});
+    $("#year").on("input change", function(){
+        filterMap()
+    });
+    
     $("#week").on("input change", function(e){
         var $slider = $("#slider");
         var week = e.target.value;
@@ -145,7 +148,7 @@ function initMap(){
         step: 1,
         onChange: function(week, meta) {
             if(meta.triggeredByUser) {
-                if(mapData != undefined){
+                if(mapPoints != undefined){
                     filterMap(week.toString());
                 }
             }
@@ -174,14 +177,23 @@ function initMap(){
     mapboxgl.accessToken = 'pk.eyJ1IjoiY2FtaWxvbGwiLCJhIjoiY2pjOGhwdmcxMDZwZjJ3bGc3b3JiZTBtaSJ9.sc0sK9N58eXsvoWZmr_Zmw';
     map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/basic-v9',
-        //style: 'mapbox://styles/mapbox/dark-v9',
-        //style: 'mapbox://styles/camiloll/cjdxxow1x0hts2ss6scqunr6j',
-        //style: 'mapbox://styles/camiloll/cjdxxyylm0hvd2ro28efpkqw2',        
+        style: 'mapbox://styles/mapbox/basic-v9',     
         center: [-75.559589, 6.336729],
         zoom: 12.5
     });
 
+    drawPolygon = new MapboxDraw({
+        displayControlsDefault: false,
+        controls: {
+            polygon: true,
+            trash: true
+        }
+    });
+
+    map.on('draw.create', updateArea);
+    map.on('draw.delete', updateArea);
+    map.on('draw.update', updateArea);
+    map.addControl(drawPolygon);
     map.addControl(new mapboxgl.NavigationControl());
 
     map.on('load', function () {
@@ -194,7 +206,7 @@ function initMap(){
         });
 
         $.getJSON('/mapa/casos/cases.json', function(data){
-            mapData = data;
+            mapPoints = data;
 
             var points = data["features"];
             var years = new Set();
@@ -652,11 +664,41 @@ function downloadDataYear(id){
     window.location.href = "/data/download/"+id;   
 };
 
-var map, mapData;
+var updateArea = function(e,dataFiltered) {
+    var data = dataFiltered;
+
+    if(data === undefined){
+        data = mapPoints;
+    };
+
+    var dataPolygon = drawPolygon.getAll();
+    var $calculationData = $('#calculated-data');
+    var areaHTML = document.getElementById('calculated-area');
+    var casesHTML = document.getElementById('calculated-cases');
+    var densityHTML = document.getElementById('calculated-density');
+    
+    if (dataPolygon.features.length > 0) {
+        $calculationData.show();
+        
+        var area = turf.area(dataPolygon);
+        var rounded_area = area.toExponential(3);
+        var points_inside = turf.within(data,dataPolygon).features.length;
+        var density = (points_inside/rounded_area).toExponential(3);
+        
+        areaHTML.innerHTML = '<label style="font-family: monospace;">Area: ' + rounded_area + ' [m<sup>2</sup>]</label>';
+        casesHTML.innerHTML = '<label style="font-family: monospace;">Casos: ' + points_inside + ' [I]nfectados</label>';
+        densityHTML.innerHTML = '<label style="font-family: monospace;">Densidad: ' + density + ' [I/m<sup>2</sup>]</label>';
+    }else if(e !== undefined){
+        $calculationData.hide();
+        areaHTML.innerHTML = '';
+        casesHTML.innerHTML = '';
+        densityHTML.innerHTML = '';
+    }
+};
 
 function filterMap(week){
     var year = $("#year").val();
-    var features = mapData["features"];
+    var features = mapPoints["features"];
     var featuresFiltered = [];
 
     if(year == "0" && week == "0"){
@@ -667,7 +709,7 @@ function filterMap(week){
                 featuresFiltered.push(n);
             }
         })
-    }else if(week == "0"){
+    }else if(week == "0" || week == undefined){
         features.forEach(function(n){
             if(n.properties.year == year){
                 featuresFiltered.push(n);
@@ -681,8 +723,10 @@ function filterMap(week){
         })
     }
     
-    var filteredData = JSON.parse(JSON.stringify(mapData));
+    var filteredData = JSON.parse(JSON.stringify(mapPoints));
         filteredData.features = featuresFiltered;
+        updateArea(undefined,filteredData);
+        
     map.getSource('cases').setData(filteredData);
 
     // document.getElementById('weekLabel').textContent = week==0?'Todas las semanas':'Semana '+week;

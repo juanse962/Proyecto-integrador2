@@ -15,10 +15,6 @@ from models import dengue
 from bottle.ext.mongo import MongoPlugin
 from bottle import route, get, post, template, redirect, static_file, error, run, request, response, default_app
 
-app = default_app()
-plugin = MongoPlugin(uri=os.environ['MONGODB_URI'], db="heroku_r18zcfb4", json_mongo=True)
-app.install(plugin)
-
 data_download_template = 'static/files/templates/data_download.xlsx'
 
 APP_TITLE = 'Epidemiología | '
@@ -564,11 +560,7 @@ def send_js(filename):
 def download(filename):
     return static_file(filename, root='static/files/templates', download=filename)
 
-if __name__ == "__main__":
-    if os.environ.get('APP_LOCATION') == 'heroku':
-        print('Running on production...')
-        run(host='localhost', port=5000, debug=False)
-    else:
-        print('Running on development...')
-        run(host='localhost', port=5000, debug=True, reloader=True)
-
+app = default_app()
+plugin = MongoPlugin(uri=os.environ['MONGODB_URI'], db="heroku_r18zcfb4", json_mongo=True)
+app.install(plugin)
+run(app,host='localhost', port=5000, debug=True, reloader=True)

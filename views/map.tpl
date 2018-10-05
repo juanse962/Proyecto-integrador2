@@ -15,7 +15,11 @@
 
   <!-- MAPBOX -->
   <script src='https://api.mapbox.com/mapbox-gl-js/v0.42.0/mapbox-gl.js'></script>
+  <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
   <link href='https://api.mapbox.com/mapbox-gl-js/v0.42.0/mapbox-gl.css' rel='stylesheet' />
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
+
   <link rel="stylesheet" type="text/css" href="/css/main.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -39,7 +43,7 @@
       </div>
     </div>
   </div>
-  <div id="map-containter">
+  <div id="map-container">
     <div id="map"></div>
     <div id='state-legend' class='legend'>
       <h4>Comunas</h4>
@@ -47,21 +51,30 @@
     <div id='map-overlay'>
       <div class='map-overlay-inner'>
         <h3>Casos de dengue por semana</h3>
-        <label>Seleccione un año y semana</label>
+        <div id="calculated-data">
+          <h5>Densidad de casos</h5>
+          <div id='calculated-area'></div>
+          <div id='calculated-cases'></div>
+          <div id='calculated-density'></div>
+        </div>
         <br>
-        <div id='slider' class="ui range"></div>
-        <br>
-        <label>Año: </label>
-        <select id="year" class="ui dropdown compact" style="min-width:7em;">
-          <option class="item" value="0">Todos</option>
-        </select>
-        <label>Semana: </label>
-        <select id="week" class="ui dropdown compact" style="min-width:7em;">
-          <option class="item" value="0">Todas</option>
-          % for week in range(1,53):
-          <option class="item" value="{{week}}">{{week}}</option>
-          % end 
-        </select>
+        <div>
+          <label>Seleccione un año y semana</label>
+          <br>
+          <div id='slider' class="ui range"></div>
+          <br>
+          <label>Año: </label>
+          <select id="year" class="ui dropdown compact" style="min-width:7em;">
+            <option class="item" value="0">Todos</option>
+          </select>
+          <label>Semana: </label>
+          <select id="week" class="ui dropdown compact" style="min-width:7em;">
+            <option class="item" value="0">Todas</option>
+            % for week in range(1,53):
+            <option class="item" value="{{week}}">{{week}}</option>
+            % end 
+          </select>
+        </div>
       </div>
     </div>
   </div>

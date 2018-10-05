@@ -191,7 +191,7 @@ def getRiskColors(mongodb, user):
             indices[n][year] = {'alpha':Sc/52}
         
         # Calculate second index: beta
-        for year in casos[n]:    
+        for year in casos[n]:
             # onda epidemiologica  (Oe)
             Oe = countWaves(casos[n][year])
             indices[n][year]['beta'] = indices[n][year]['alpha']*52/Oe
@@ -229,6 +229,8 @@ def getRiskColors(mongodb, user):
     return dataByIndex
 
 def saveData(mongodb, user, ws, datatype):
+    result = False
+
     if datatype == 'cecps':
         i = 2
         while True:
@@ -240,7 +242,7 @@ def saveData(mongodb, user, ws, datatype):
             datapob = int(ws['B'+row].value)
             channel = [[i.value for i in j] for j in ws['C'+row:'BB'+row]]
             datachannel = str(channel[0]).replace('None','0')
-            mongodb[user].byWeeks.data.replace_one({'year':datayear}, {'year':datayear,'population':datapob,'data':datachannel}, True)
+            result = mongodb[user].byWeeks.data.replace_one({'year':datayear}, {'year':datayear,'population':datapob,'data':datachannel}, True)
             i += 1
     
     elif datatype == 'geopos':
