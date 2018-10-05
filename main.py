@@ -13,11 +13,16 @@ from functions import *
 from models import dengue
 
 from bottle.ext.mongo import MongoPlugin
-from bottle import route, get, post, template, redirect, static_file, error, run, request, response, default_app
+from bottle import Bottle, route, get, post, template, redirect, static_file, error, run, request, response, default_app
 
 data_download_template = 'static/files/templates/data_download.xlsx'
 
 APP_TITLE = 'Epidemiología | '
+
+debugging = False
+
+app = Bottle()
+plugin = MongoPlugin(uri=os.environ['MONGODB_URI'], db="heroku_r18zcfb4", json_mongo=True, keyword='mongodb')
 
 def is_auth(mongodb, cookie):
     return mongodb.sessions.count({'cookie':cookie}) > 0
@@ -38,7 +43,7 @@ def check_login(mongodb, user, password):
 def tpl(name, page_title, error_msg=None, data=None):
     return template(name, title=APP_TITLE+page_title, error_msg=error_msg, data=data)
 
-@route('/')
+@app.route('/')
 def main(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -50,7 +55,7 @@ def main(mongodb):
 
     return tpl('home', 'Inicio')
 
-@route('/ingreso/')
+@app.route('/ingreso/')
 def show_login(mongodb):
     if is_auth(mongodb, request.get_cookie('auth')):
         redirect('/')
@@ -64,7 +69,7 @@ def show_login(mongodb):
 
         return tpl('login', 'Ingreso', error_msg)
 
-@route('/simulador/')
+@app.route('/simulador/')
 def show_simulator(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -74,7 +79,7 @@ def show_simulator(mongodb):
     else:
         redirect('/')
 
-@route('/datos/')
+@app.route('/datos/')
 def show_data(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -98,7 +103,7 @@ def show_data(mongodb):
     else:
         redirect('/')
 
-@route('/canal/')
+@app.route('/canal/')
 def show_channel(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -109,28 +114,28 @@ def show_channel(mongodb):
     else:
         redirect('/')
 
-@route('/mapa/')
+@app.route('/mapa/')
 def show_map(mongodb):
     if is_auth(mongodb, request.get_cookie('auth')):
         return tpl('map', 'Mapa')
     else:
         redirect('/')
 
-@route('/prediccion/')
+@app.route('/prediccion/')
 def show_map(mongodb):
     if is_auth(mongodb, request.get_cookie('auth')):
         return tpl('prediction', 'Predicción')
     else:
         redirect('/')
 
-@route('/riesgo/')
+@app.route('/riesgo/')
 def show_risk_map(mongodb):
     if is_auth(mongodb, request.get_cookie('auth')):
         return tpl('risk', 'Mapa de riesgo')
     else:
         redirect('/')
 
-@route('/riesgo/comunas/layers.json')
+@app.route('/riesgo/comunas/layers.json')
 def map_risk(mongodb):
     cookie = request.get_cookie('auth')
     if is_auth(mongodb, cookie):
@@ -146,7 +151,7 @@ def map_risk(mongodb):
     else:
         redirect('/')
 
-@route('/mapa/comunas/layers.json')
+@app.route('/mapa/comunas/layers.json')
 def map_layers(mongodb):
     cookie = request.get_cookie('auth')
     if is_auth(mongodb, cookie):
@@ -163,7 +168,7 @@ def map_layers(mongodb):
     else:
         redirect('/')
 
-@route('/mapa/casos/cases.json')
+@app.route('/mapa/casos/cases.json')
 def map_cases(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -179,14 +184,14 @@ def map_cases(mongodb):
     else:
         redirect('/')
 
-@get('/datos/cargar')
+@app.get('/datos/cargar')
 def redirect_to_data(mongodb):
     if is_auth(mongodb, request.get_cookie('auth')):
         redirect('/datos/')
     else:
         redirect('/')
 
-@post('/datos/cargar')
+@app.post('/datos/cargar')
 def do_upload(mongodb):
     cookie = request.get_cookie('auth')
     
@@ -259,7 +264,7 @@ def do_upload(mongodb):
     else:
         redirect('/')
 
-@post('/canal/crear')
+@app.post('/canal/crear')
 def make_chanel(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -293,7 +298,7 @@ def make_chanel(mongodb):
     else:
         redirect('/')
 
-@post('/data/remove')
+@app.post('/data/remove')
 def delete_year_from_db(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -305,7 +310,7 @@ def delete_year_from_db(mongodb):
     else:
         redirect('/')
 
-@get('/data/download/<yearId>')
+@app.get('/data/download/<yearId>')
 def download_year_from_db(mongodb, yearId):
     cookie = request.get_cookie('auth')
 
@@ -341,12 +346,12 @@ def download_year_from_db(mongodb, yearId):
     else:
         redirect('/')
 
-@post('/simulador/sim')
+@app.post('/simulador/sim')
 def do_simulation(mongodb):
     params = request.forms.get('params')
     return dengue(loads(params))
 
-@post('/login')
+@app.post('/login')
 def check_pass(mongodb):
     username = request.forms.get('username')
     password = request.forms.get('password')
@@ -361,7 +366,7 @@ def check_pass(mongodb):
     else:
         redirect('/ingreso/?login_error=1')
 
-@route('/usuarios/')
+@app.route('/usuarios/')
 def users(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -370,7 +375,7 @@ def users(mongodb):
     else:
         redirect('/')
 
-@route('/usuarios/nuevo')
+@app.route('/usuarios/nuevo')
 def users(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -396,7 +401,7 @@ def users(mongodb):
     else:
         redirect('/')
 
-@post('/usuarios/crear')
+@app.post('/usuarios/crear')
 def new_user(mongodb):
     user = request.forms.get('user')
     pass1 = request.forms.get('pass1')
@@ -421,7 +426,7 @@ def new_user(mongodb):
     else:
         redirect('/usuarios/nuevo?new_error=3')
 
-@post('/usuarios/actualizar')
+@app.post('/usuarios/actualizar')
 def users_update_post(mongodb):
     user = request.forms.get('user')
     role = request.forms.get('role')
@@ -435,7 +440,7 @@ def users_update_post(mongodb):
     else:
         redirect('/')
 
-@get('/usuarios/actualizar')
+@app.get('/usuarios/actualizar')
 def users_update_get(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -467,7 +472,7 @@ def users_update_get(mongodb):
     else:
         redirect('/')
 
-@post('/usuarios/modificar')
+@app.post('/usuarios/modificar')
 def change_user(mongodb):
     user = request.forms.get('_user')
     pass1 = request.forms.get('pass1')
@@ -492,7 +497,7 @@ def change_user(mongodb):
     else:
         redirect('/usuarios/actualizar?update_error=3&user=%s&role=%s'% (user,role))
 
-@post('/usuarios/cambiar')
+@app.post('/usuarios/cambiar')
 def username_change(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -508,7 +513,7 @@ def username_change(mongodb):
 
     return ''
 
-@post('/usuarios/eliminar')
+@app.post('/usuarios/eliminar')
 def remove_user(mongodb):
     id = request.forms.get('id')
     cookie = request.get_cookie('auth')
@@ -526,7 +531,7 @@ def remove_user(mongodb):
         mongodb.users.remove({'_id':ObjectId(id)})
         redirect('/usuarios/')
 
-@route('/salir')
+@app.route('/salir')
 def remove_auth(mongodb):
     cookie = request.get_cookie('auth')
 
@@ -536,31 +541,31 @@ def remove_auth(mongodb):
 
     redirect('/')
 
-@route('/imgs/<filename:path>')
+@app.route('/imgs/<filename:path>')
 def send_css(filename):
     response = static_file(filename, root='static/imgs')
     response.set_header("Cache-Control", "public, max-age=604800")
     #response.set_header("Cache-Control", "public, max-age=0")
     return response
 
-@route('/css/<filename:path>')
+@app.route('/css/<filename:path>')
 def send_css(filename):
     response = static_file(filename, root='static/css')
     #response.set_header("Cache-Control", "public, max-age=604800")
     response.set_header("Cache-Control", "public, max-age=0")
     return response
 
-@route('/js/<filename>')
+@app.route('/js/<filename>')
 def send_js(filename):
     response = static_file(filename, root='static/js')
     response.set_header("Cache-Control", "public, max-age=0")
     return response
 
-@route('/plantillas/<filename:path>')
+@app.route('/plantillas/<filename:path>')
 def download(filename):
     return static_file(filename, root='static/files/templates', download=filename)
 
-app = default_app()
-plugin = MongoPlugin(uri=os.environ['MONGODB_URI'], db="heroku_r18zcfb4", json_mongo=True)
-app.install(plugin)
-run(app,host='localhost', port=5000, debug=True, reloader=True)
+if debugging and os.environ.get('APP_LOCATION') == 'LOCAL':
+    run(app,host='0.0.0.0', server='wsgiref', plugins=[plugin], port=5000, debug=True, reloader=True)
+else:
+    run(app,host='0.0.0.0', server='gunicorn', workers=4, plugins=[plugin], port=os.environ.get('PORT'), quiet=True)
