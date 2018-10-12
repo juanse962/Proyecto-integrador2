@@ -16,7 +16,7 @@ def get_data():
 def linear_regression():
     data = get_data()
     Y = np.array(data['No. Casos'])
-    X = np.array([data['Temperatura'], data['Precipitacion'], data['H. Relativa'], data['No. Busquedas']]).T
+    X = np.array([data['Temperatura'], data['No. Busquedas']]).T
     regression = LinearRegression()
     regression.fit(X,Y)
     Y_prediction = regression.predict(X)
@@ -24,7 +24,7 @@ def linear_regression():
     error_square = np.sqrt(error)
     r2 = regression.score(X,Y_prediction)
     #pl.plot(data['Semana'], Y, '-r', label='Data')
-    pl.plot(data['Semana'], Y_prediction, label='Regression')
+    #pl.plot(data['Semana'], Y_prediction, label='Regression')
     pl.legend()
     #pl.show()
     return (error, error_square, r2)
@@ -32,17 +32,29 @@ def linear_regression():
 
 def support_vector_machine():
     data = get_data()
-    X = np.array([data['Temperatura'], data['Precipitacion'], data['H. Relativa'], data['No. Busquedas']]).T
-    Y = data['No. Casos']
+    X = np.array([data['Temperatura'], data['No. Busquedas']]).T
+    Y = list(data['No. Casos'])
     model = svm.SVR(kernel='rbf', C=1e3, gamma='auto')
-    model.fit(X,Y)
+    model.fit(X[:-1],Y[1:])
     prediction = model.predict(X)
-    taining_set = model.predict(X[:-1])
     r2 = model.score(X, prediction)
     error = np.sqrt(mean_squared_error(Y, prediction)) 
     square_error = np.sqrt(error)
+    y_future = []
+    i = -1
+    weeks = []
+
+    for x in range(1,4):
+        x_predict = X[i]
+        y_future.append(model.predict([x_predict]))
+        weeks.append(list(data['Semana'])[-1]+x)
+        i -= 1
+
+    prediction[-1] = float('Nan')
+    Y[0] = float('Nan')
     pl.plot(data['Semana'], prediction, '-r', label='SVR')
-    pl.plot(data['Semana'], Y, 'x', label='Data')
+    pl.plot(data['Semana'], Y, '-g', label='Data')
+    pl.plot(weeks, y_future, label='Future Data')
     pl.legend()
     pl.show()
     return (error, square_error, r2)
@@ -55,7 +67,13 @@ def get_information():
     print (df)
 
 
+def get_corr():
+    data = get_data()
+    df = pd.DataFrame(data=data)
+    print df[['No. Casos', 'Temperatura', 'Precipitacion', 'H. Relativa', 'No. Busquedas']].corr(method='pearson')
+
 
 
 if __name__ == '__main__':
     get_information()
+    #get_corr()

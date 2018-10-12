@@ -19,7 +19,7 @@ data_download_template = 'static/files/templates/data_download.xlsx'
 
 APP_TITLE = 'Epidemiología | '
 
-debugging = False
+debugging = True
 
 app = Bottle()
 plugin = MongoPlugin(uri=os.environ['MONGODB_URI'], db="heroku_r18zcfb4", json_mongo=True, keyword='mongodb')

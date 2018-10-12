@@ -184,7 +184,7 @@
               </div>
             </div>
             <div class="ui three bottom attached buttons">
-              <a class="ui button disabled" href="prediccion/">Abrir</a>
+              <a class="ui button" href="prediccion/">Abrir</a>
             </div>
           </div>
         </div> 

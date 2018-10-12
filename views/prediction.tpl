@@ -41,17 +41,15 @@
       <div class="column">
         <div class="ui raised very padded segment">
           <h2 class="ui header">Predicción</h2>
-          <p style="text-align:justify"></p>
+          <p style="text-align:justify">
+            La prediccion estadistica es una herramienta que ayuda a predecir los casos de dengue en un tiempo futuro.
+          <br><br>
+            Hay varias metodologias para calcularlo, y para todas ellas se necesitan tener los casos anteriores,
+            la temperatura promedio y las busquedas de la palabra dengue en Google. La grafica muestra los caos
+            y la prediccion con el metodo seleccionado. 
+          </p>
         </div>
       </div>
-    </div>
-    <br>
-    <h4 class="ui horizontal divider header">
-      <i class="bar chart icon"></i>
-      Estimación
-    </h4>
-    <div class="ui container chart-container">
-      <canvas id="chart-est" style="height:85vh"></canvas>
     </div>
     <br>
     <h4 class="ui horizontal divider header">
