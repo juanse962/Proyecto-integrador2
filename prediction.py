@@ -50,8 +50,8 @@ def support_vector_machine():
         weeks.append(list(data['Semana'])[-1]+x)
         i -= 1
 
-    prediction[-1] = float('Nan')
-    Y[0] = float('Nan')
+    prediction[0] = float('Nan')
+    Y[-1] = float('Nan')
     pl.plot(data['Semana'], prediction, '-r', label='SVR')
     pl.plot(data['Semana'], Y, '-g', label='Data')
     pl.plot(weeks, y_future, label='Future Data')
