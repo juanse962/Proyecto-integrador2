@@ -205,6 +205,8 @@ def do_upload(mongodb):
         name, ext = os.path.splitext(upload.filename)
         datatype = request.forms.get('datatype')
 
+
+        print (name)
         if ext not in ('.xlsx') or datatype is None:
             redirect('/datos/?data_error=1')
 
