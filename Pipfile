@@ -14,6 +14,7 @@ bcrypt = "*"
 shapely = {extras = ["vectorized"]}
 scipy = "*"
 sklearn = "*"
+pandas = "*"
 
 [dev-packages]
 
