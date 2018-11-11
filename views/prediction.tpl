@@ -13,6 +13,31 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css" integrity="sha256-/Z28yXtfBv/6/alw+yZuODgTbKZm86IKbPE/5kjO/xY="
     crossorigin="anonymous" />
   <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <style>
+    .Rtable {
+      display: flex; 
+      flex-wrap: wrap;
+      margin: 0 0 3em 0;
+      padding: 0;
+    }
+    .Rtable-cell {
+      box-sizing: border-box;
+      flex-grow: 1;
+      width: 100%;
+      padding: 0.2em 0.8em;
+      overflow: hidden;
+      list-style: none;
+      border: solid 1px rgba(112, 128, 144, 0.2);
+      background: white;
+    }
+    .Rtable-cell.center {
+      text-align: center;
+      background: #f8f8f9 !important;
+    }
+    /* Table column sizing
+    ================================== */
+    .Rtable--3cols > .Rtable-cell  { width: 30%; }
+  </style>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" integrity="sha256-c0m8xzX5oOBawsnLVpHnU2ieISOvxi584aNElFl2W6M="
     crossorigin="anonymous"></script>
@@ -48,6 +73,45 @@
             la temperatura promedio y las busquedas de la palabra dengue en Google. La grafica muestra los caos
             y la prediccion con el metodo seleccionado. 
           </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui attached message">
+          <div class="header">
+            Seleccion de algoritmo
+          </div>
+          <p> Selecciona el algoritmo que deseas aplicar a tus datos </p>
+        </div>
+
+        <form class="ui form attached fluid segment" method="post" action="" enctype="multipart/form-data">
+          <div class="field">
+            <select id="predictionMethod" class="ui dropdown">
+              <option selected value="r_lineal">Regresion lineal</option>
+              <option value="svm">maquina de soporte vectorial (lineal)</option>
+              <option value="kn">K vecinos mas cercanos (lineal)</option>
+            </select>
+          </div>
+          <div class="six wide field">
+            <div class="ui blue submit button" onclick="makePrediction()">Construir grafica</div>
+          </div>
+        </form>
+
+        <div class="ui attached message">
+          <div class="header">
+            Metricas de evaluacion
+          </div>
+          <p> Some description heree </p>
+        </div>
+        <div class="Rtable Rtable--3cols">
+          <div style="order:1;" class="Rtable-cell center"><strong>R^2</strong></div>
+          <div id="r2" style="order:2;" class="Rtable-cell">0.04</div>
+
+          <div style="order:1;" class="Rtable-cell center"><strong>MSE</strong></div>
+          <div id="mse" style="order:2;" class="Rtable-cell">0.2</div>
+
+          <div style="order:1;" class="Rtable-cell center"><strong>RMSE</strong></div>
+          <div id="rmse" style="order:2;" class="Rtable-cell">0.1</div>
+
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@ numpy = "*"
 bcrypt = "*"
 shapely = {extras = ["vectorized"]}
 scipy = "*"
+sklearn = "*"
 
 [dev-packages]
 

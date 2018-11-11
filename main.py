@@ -11,6 +11,7 @@ from bson.json_util import loads, dumps
 # Aux functions for bottle server
 from functions import *
 from models import dengue
+from prediction import *
 
 from bottle.ext.mongo import MongoPlugin
 from bottle import Bottle, route, get, post, template, redirect, static_file, error, run, request, response, default_app
@@ -184,12 +185,27 @@ def map_cases(mongodb):
     else:
         redirect('/')
 
+@app.post('/prediccion/crear')
+def make_prediction(mongodb):
+    cookie = request.get_cookie('auth')
+
+    method = request.forms.get('predictionMethod')
+    data = get_method(method)
+    return data
+
+    #else:
+     #   redirect('/')
+
+
+
+
 @app.get('/datos/cargar')
 def redirect_to_data(mongodb):
     if is_auth(mongodb, request.get_cookie('auth')):
         redirect('/datos/')
     else:
         redirect('/')
+
 
 @app.post('/datos/cargar')
 def do_upload(mongodb):
@@ -206,7 +222,6 @@ def do_upload(mongodb):
         datatype = request.forms.get('datatype')
 
 
-        print (name)
         if ext not in ('.xlsx') or datatype is None:
             redirect('/datos/?data_error=1')
 
@@ -217,7 +232,7 @@ def do_upload(mongodb):
 
         ws = wb.active
         
-        if datatype in ('cecps', 'geopos', 'params', 'layers'):
+        if datatype in ('cecps', 'geopos', 'params', 'layers', 'predict'):
             if datatype == 'cecps':
                 # Check for empty or incomplete data
                 if ws['A2'].value is None:
@@ -257,6 +272,18 @@ def do_upload(mongodb):
                     redirect('/datos/?data_error=74')
                 elif ws['E2'].value is not None:
                     redirect('/datos/?data_error=75')
+
+            elif datatype == 'predict':
+                if ws['A2'].value is None:
+                    redirect('/datos/?data_error=76')
+                elif ws['B2'].value is None:
+                    redirect('/datos/?data_error=77')
+                elif ws['C2'].value is None:
+                    redirect('/datos/?data_error=78')
+                elif ws['D2'].value is None:
+                    redirect('/datos/?data_error=79')
+                elif ws['E2'].value is not None:
+                    redirect('/datos/?data_error=80')
 
             saveData(mongodb, user, ws, datatype)
         else:

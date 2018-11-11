@@ -4,6 +4,7 @@ import numpy as np
 from random import choice
 from bson.json_util import loads, dumps
 from shapely.geometry import mapping, shape, Point
+from bson.objectid import ObjectId
 
 def getUsers(mongodb):
     return mongodb.users.find({ 'user': { '$ne': 'admin' } },{'user':1,'role':1})
@@ -320,4 +321,26 @@ def saveData(mongodb, user, ws, datatype):
             i += 1
         result = mongodb[user].layers.replace_one({}, data, True)
 
+    elif datatype == 'predict':
+        mongodb[user].prediction.delete_many({})
+        data = dict()
+        data_list = []
+        i = 2
+        while True:
+            row = str(i)
+            cell = ws['A'+row].value
+            if cell is None:
+                break
+            year = str(cell)
+            week = ws['B'+row].value
+            temp = ws['C'+row].value
+            searches = ws['D'+row].value
+            data['year'] = year
+            data['week'] = week
+            data['temp'] = temp
+            data['searches'] = searches
+            data['_id'] = ObjectId()
+            i += 1
+            result = mongodb[user].prediction.insert(data)
+            
     return result

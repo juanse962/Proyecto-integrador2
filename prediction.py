@@ -6,7 +6,6 @@ from sklearn.metrics import mean_squared_error, accuracy_score, precision_score
 
 import pandas as pd
 import numpy as np
-import pylab as pl
 
 
 def get_data():
@@ -15,19 +14,16 @@ def get_data():
 
 def linear_regression():
     data = get_data()
-    Y = np.array(data['No. Casos'])
+    Y = list(data['No. Casos'])
     X = np.array([data['Temperatura'], data['No. Busquedas']]).T
     regression = LinearRegression()
-    regression.fit(X,Y)
+    regression.fit(X[:-1],Y[1:])
     Y_prediction = regression.predict(X)
     error = mean_squared_error(Y, Y_prediction)
     error_square = np.sqrt(error)
     r2 = regression.score(X,Y_prediction)
-    #pl.plot(data['Semana'], Y, '-r', label='Data')
-    #pl.plot(data['Semana'], Y_prediction, label='Regression')
-    pl.legend()
-    #pl.show()
-    return (error, error_square, r2)
+    Y_prediction = quit_zeros(Y_prediction)
+    return ({'data':Y, 'data_p':list(Y_prediction), 'mse':error, 'rmse':error_square, 'r^2':r2})
 
 
 def support_vector_machine():
@@ -50,15 +46,20 @@ def support_vector_machine():
         weeks.append(list(data['Semana'])[-1]+x)
         i -= 1
 
-    prediction[0] = float('Nan')
-    Y[-1] = float('Nan')
-    pl.plot(data['Semana'], prediction, '-r', label='SVR')
-    pl.plot(data['Semana'], Y, '-g', label='Data')
-    pl.plot(weeks, y_future, label='Future Data')
-    pl.legend()
-    pl.show()
-    return (error, square_error, r2)
+    #prediction[0] = 'nan'
+    #Y[-1] = 'nan'
 
+    prediction = quit_zeros(prediction)
+    return ({'data':Y,'data_p':list(prediction),'mse':error, 'rmse':square_error, 'r^2':r2})
+
+
+def get_method(method):
+    if method == 'r_lineal':
+        return linear_regression()
+    elif method == 'svm':
+        return support_vector_machine()
+    else:
+        return ({'error':'falta por implementar el kn'})
 
 def get_information():
     linear_r = linear_regression()
@@ -66,14 +67,15 @@ def get_information():
     df = pd.DataFrame([linear_r, svr], columns=['MSE', 'RMSE', 'Score'])
     print (df)
 
+def quit_zeros(data):
+    for i in range(len(data)):
+        if data[i] < 0:
+            data[i] = 0
+    return data
 
-def get_corr():
+
+"""def get_corr():
     data = get_data()
     df = pd.DataFrame(data=data)
     print df[['No. Casos', 'Temperatura', 'Precipitacion', 'H. Relativa', 'No. Busquedas']].corr(method='pearson')
-
-
-
-if __name__ == '__main__':
-    get_information()
-    #get_corr()
+"""
