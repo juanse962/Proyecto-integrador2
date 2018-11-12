@@ -189,12 +189,12 @@ def map_cases(mongodb):
 def make_prediction(mongodb):
     cookie = request.get_cookie('auth')
 
-    method = request.forms.get('predictionMethod')
-    data = get_method(method)
-    return data
-
-    #else:
-     #   redirect('/')
+    if is_auth(mongodb, cookie):
+        method = request.forms.get('predictionMethod')
+        data = get_method(method)
+        return data
+    else:
+        redirect('/')
 
 
 

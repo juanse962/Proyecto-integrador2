@@ -104,13 +104,13 @@
         </div>
         <div class="Rtable Rtable--3cols">
           <div style="order:1;" class="Rtable-cell center"><strong>R^2</strong></div>
-          <div id="r2" style="order:2;" class="Rtable-cell">0.04</div>
+          <div id="r2" style="order:2;" class="Rtable-cell">1</div>
 
           <div style="order:1;" class="Rtable-cell center"><strong>MSE</strong></div>
-          <div id="mse" style="order:2;" class="Rtable-cell">0.2</div>
+          <div id="mse" style="order:2;" class="Rtable-cell">6.815787431344311</div>
 
           <div style="order:1;" class="Rtable-cell center"><strong>RMSE</strong></div>
-          <div id="rmse" style="order:2;" class="Rtable-cell">0.1</div>
+          <div id="rmse" style="order:2;" class="Rtable-cell">2.6107063089026905</div>
 
         </div>
       </div>
