@@ -362,7 +362,44 @@
                   </span>
                 </div>
               </div>
-
+              <div class="card">
+                <div class="image">
+                  <img src="/imgs/avatars/andres.jpg">
+                </div>
+                <div class="content">
+                  <div class="header">Andrés Pulgarín Rodriguez</div>
+                  <div class="meta">
+                    <a>Desarrollo Web, Predicción.</a>
+                  </div>
+                  <div class="description">
+                      Estudiante de Ingeniería de Sistemas de la Universidad EAFIT.
+                  </div>
+                </div>
+                <div class="extra content">
+                  <span class="right floated">
+                    <a href="mailto:apulgar3@eafit.edu.co​​">apulgar@eafit.edu.co​​</a>
+                  </span>
+                </div>
+              </div>
+              <div class="card">
+                <div class="image">
+                  <img src="/imgs/avatars/santiago.jpg">
+                </div>
+                <div class="content">
+                  <div class="header">Santiago Escobar Mejia</div>
+                  <div class="meta">
+                    <a>Desarrollo Web.</a>
+                  </div>
+                  <div class="description">
+                      Estudiante de Ingeniería de Sistemas de la Universidad EAFIT.
+                  </div>
+                </div>
+                <div class="extra content">
+                  <span class="right floated">
+                    <a href="mailto:sescobarm3@eafit.edu.co​​">sescobarm@eafit.edu.co​​</a>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
       </div>

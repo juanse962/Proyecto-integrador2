@@ -331,11 +331,11 @@ def saveData(mongodb, user, ws, datatype):
             cell = ws['A'+row].value
             if cell is None:
                 break
-            year = str(cell)
-            week = ws['B'+row].value
+            week = str(cell)
+            cases = ws['B'+row].value
             temp = ws['C'+row].value
             searches = ws['D'+row].value
-            data['year'] = year
+            data['cases'] = cases
             data['week'] = week
             data['temp'] = temp
             data['searches'] = searches

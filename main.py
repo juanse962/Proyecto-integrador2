@@ -93,6 +93,8 @@ def show_data(mongodb):
                 error_msg = '<div style="display:block;" class="ui error message"><ul class="list"><li>El archivo que cargaste no es compatible.</li></ul></div>'
             elif int(error_flag) == -1:
                 error_msg = '<div style="display:block;" class="ui error message"><ul class="list"><li>No seleccionaste ningún archivo.</li></ul></div>'
+            elif int(error_flag) == -2:
+                error_msg = '<div style="display:block;" class="ui error message"><ul class="list"><li>El archivo debe contener mas de 99 filas.</li></ul></div>'
             else:
                 error_msg = '<div style="display:block;" class="ui success message"><ul class="list"><li>El archivo fue cargado correctamente.</li></ul></div>'
 
@@ -185,13 +187,15 @@ def map_cases(mongodb):
     else:
         redirect('/')
 
+
 @app.post('/prediccion/crear')
 def make_prediction(mongodb):
     cookie = request.get_cookie('auth')
 
     if is_auth(mongodb, cookie):
+        user = mongodb.sessions.find_one({'cookie':cookie}, {'user':1})['user']
         method = request.forms.get('predictionMethod')
-        data = get_method(method)
+        data = get_method(mongodb, method, user)
         return data
     else:
         redirect('/')
@@ -274,7 +278,9 @@ def do_upload(mongodb):
                     redirect('/datos/?data_error=75')
 
             elif datatype == 'predict':
-                if ws['A2'].value is None:
+                if len(list(ws)) < 100:
+                    redirect('/datos/?data_error=-2')
+                elif ws['A2'].value is None:
                     redirect('/datos/?data_error=76')
                 elif ws['B2'].value is None:
                     redirect('/datos/?data_error=77')

@@ -273,13 +273,13 @@
         <div class="ui message">
             <div class="header">Ejemplo 5 <a title="Descargar plantilla para el ejemplo 5" href="/plantillas/ejemplo5.xlsx"><i class="icon download"></i></a></div>
             <ul class="list">
-              <li>La primera columna [A] lleva el año.</li>
-              <li>La segunda columna [B] es el numero de la semana.</li>
+              <li>La primera columna [A] lleva la semana.</li>
+              <li>La segunda columna [B] es el numero de casos de contagiados con denge en esa semana.</li>
               <li>La tercera columna [C] es la temperatura de dicha semana. </li>
               <li>La cuarta columna [D] es el numero de busquedas de la palabra <strong>dengue</strong>.</li>
               <li>El modelo matematico predice los numeros de casos de dengue gracias a paremetros como el numero de busquedas y la temperatura</li>
+              <li>Debe ingresar un archivo con mas de 99 filas con las semanas ordenadas de manera ascendente</li>
               <li>El numero de busquedas de la palabra <strong>dengue</strong> las puede encontrar en https://trends.google.es/trends/explore?geo=CO&q=dengue.</li>
-              <li> El año no aparece en el modelo pero es necesario.
             </ul>
         </div>
 
@@ -293,20 +293,20 @@
             <div style="order:7" class="Rtable-cell center"><strong>6</strong></div>
 
             <div style="order:1" class="Rtable-cell center"><strong>A</strong></div>
-            <div style="order:2" class="Rtable-cell">Año</div>
-            <div style="order:3" class="Rtable-cell">2008</div>
-            <div style="order:4" class="Rtable-cell">2008</div>
-            <div style="order:5" class="Rtable-cell">2008</div>
-            <div style="order:6" class="Rtable-cell">2008</div>
-            <div style="order:7" class="Rtable-cell">2008</div>
-
-            <div style="order:1" class="Rtable-cell center"><strong>B</strong></div>
             <div style="order:2" class="Rtable-cell">Semana</div>
             <div style="order:3" class="Rtable-cell">1</div>
             <div style="order:4" class="Rtable-cell">2</div>
             <div style="order:5" class="Rtable-cell">3</div>
             <div style="order:6" class="Rtable-cell">4</div>
             <div style="order:7" class="Rtable-cell">5</div>
+
+            <div style="order:1" class="Rtable-cell center"><strong>B</strong></div>
+            <div style="order:2" class="Rtable-cell">Casos</div>
+            <div style="order:3" class="Rtable-cell">10</div>
+            <div style="order:4" class="Rtable-cell">2</div>
+            <div style="order:5" class="Rtable-cell">6</div>
+            <div style="order:6" class="Rtable-cell">2</div>
+            <div style="order:7" class="Rtable-cell">9</div>
 
             <div style="order:1" class="Rtable-cell center"><strong>C</strong></div>
             <div style="order:2" class="Rtable-cell">Temperatura</div>

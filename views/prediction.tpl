@@ -48,7 +48,7 @@
   <script src="/js/app.js"></script>
 </head>
 
-<body onload="initPrediction()">
+<body onload="makePrediction()">
   <div class="ui fixed inverted menu">
     <div class="ui container">
       <a href="/" class="header item">
@@ -86,13 +86,13 @@
         <form class="ui form attached fluid segment" method="post" action="" enctype="multipart/form-data">
           <div class="field">
             <select id="predictionMethod" class="ui dropdown">
-              <option selected value="r_lineal">Regresion lineal</option>
-              <option value="svm">maquina de soporte vectorial (lineal)</option>
-              <option value="kn">K vecinos mas cercanos (lineal)</option>
+              <option selected value="svm">maquina de soporte vectorial (lineal)</option>
+              <option value="kn">K vecinos mas cercanos (Regresion)</option>
+              <option value="r_lineal">Regresion lineal</option>
             </select>
           </div>
           <div class="six wide field">
-            <div class="ui blue submit button" onclick="makePrediction()">Construir grafica</div>
+            <div id="btnPredict" class="ui blue submit button" onclick="makePrediction()">Construir grafica</div>
           </div>
         </form>
 
@@ -100,7 +100,11 @@
           <div class="header">
             Metricas de evaluacion
           </div>
-          <p> Some description heree </p>
+          <ul class="list">
+            <li> <strong>Coeficiente de determinacion (R^2): </strong>El coeficiente determina la calidad del modelo para replicar los resultados. adquiere valores entre 0 y 1. Mientras mas cercano este a 1 mejor</li>
+            <li> <strong>Error cuadrático medio (MSE): </strong>  mide el promedio de los errores al cuadrado, es decir, la diferencia entre el estimador y lo que se estima. Mientras mas cercano a 0 mejor </li>
+            <li> <strong>Error de la raiz cuadrada (RMSE) </strong> es la raíz cuadrada de la varianza, conocida como la desviación estándar. </li>
+          </ul>
         </div>
         <div class="Rtable Rtable--3cols">
           <div style="order:1;" class="Rtable-cell center"><strong>R^2</strong></div>
